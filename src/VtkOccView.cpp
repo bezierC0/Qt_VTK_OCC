@@ -4,7 +4,7 @@
 #include <STEPControl_Reader.hxx>
 #include <BRepPrimAPI_MakeBox.hxx>
 #include <BRepMesh_IncrementalMesh.hxx>
-#include <IVtkTools_ShapeDataSource.hxx>
+//#include <IVtkTools_ShapeDataSource.hxx>
 #include <BRep_Tool.hxx>
 #include <TopExp_Explorer.hxx>
 #include <TopoDS.hxx>
@@ -67,30 +67,30 @@ void VtkOccView::createTestCube()
   //cubeSource->SetZLength( 10.0 );
   //cubeSource->Update();
 
-  auto reader = vtkSmartPointer<vtkDataSetReader>::New();
-  reader->SetFileName(R"(C:\Download\Data\Data\Data\fran_cut.vtk)");
-  
-  reader->Update();
-  
+  //auto reader = vtkSmartPointer<vtkDataSetReader>::New();
+  //reader->SetFileName(R"(C:\MyWork\005.TestData\vtk\Data\fran_cut.vtk)");
+  //
+  //reader->Update();
+  //
 
-  vtkSmartPointer<vtkPolyDataMapper> mapper = vtkSmartPointer<vtkPolyDataMapper>::New();
-  mapper->SetInputConnection( reader->GetOutputPort() );
+  //vtkSmartPointer<vtkPolyDataMapper> mapper = vtkSmartPointer<vtkPolyDataMapper>::New();
+  //mapper->SetInputConnection( reader->GetOutputPort() );
 
 
   vtkSmartPointer<vtkActor> actor = vtkSmartPointer<vtkActor>::New();
-  actor->SetMapper( mapper );
+  //actor->SetMapper( mapper );
 
 
   m_pRenderer->AddActor( actor );
   m_pRenderer->ResetCamera();
 
-  //TopoDS_Shape cube1 = BRepPrimAPI_MakeBox( { -20 ,-20, -10 }, 10.0, 10.0, 10.0 ).Shape();
-  //TopoDS_Shape cube2 = BRepPrimAPI_MakeBox( { 20 ,20, 20 }, 10.0, 20, 10.0 ).Shape();
-  //displayShape( cube1 );
-  //displayShape( cube2 );
+  TopoDS_Shape cube1 = BRepPrimAPI_MakeBox( { -20 ,-20, -10 }, 10.0, 10.0, 10.0 ).Shape();
+  TopoDS_Shape cube2 = BRepPrimAPI_MakeBox( { 20 ,20, 20 }, 10.0, 20, 10.0 ).Shape();
+  displayShape( cube1 );
+  displayShape( cube2 );
 
   STEPControl_Reader stepReader;
-  IFSelect_ReturnStatus status = stepReader.ReadFile( R"(C:\Libs\OCCT-7.7.0-vc14-64\opencascade-7.7.0\data\step\linkrods.step)" );
+  IFSelect_ReturnStatus status = stepReader.ReadFile( R"(C:\Libs\OCCT\occt-7.7.0\data\step\linkrods.step)" );
 
   if ( status == IFSelect_RetDone ) {
     bool fail = false;
@@ -107,7 +107,7 @@ void VtkOccView::createTestCube()
   }
   else {
     std::cerr << "\n";
-}
+  }
 
 
 

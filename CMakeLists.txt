@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.12)
-project(CADViewer)
+project(Qt_VTK_OCC)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -8,14 +8,31 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # Qt
 ##########
 find_package(Qt5 REQUIRED COMPONENTS Widgets OpenGL Gui)
-
+if(Qt5_FOUND)
+    message(STATUS "Qt5_DIR = ${Qt5_DIR}")
+    message(STATUS "Qt5_INCLUDE_DIR = ${Qt5_INCLUDE_DIR}")
+    message(STATUS "Qt5_LIBRARY_DIR = ${Qt5_LIBRARY_DIR}")
+    message(STATUS "Qt5_LIBRARIES = ${Qt5_LIBRARIES}")
+    message(STATUS "Qt5_FOUND = ${Qt5_FOUND}")
+    message(STATUS "Qt5_VERSION = ${Qt5_VERSION}")
+    message(STATUS "Qt5_VERSION_MAJOR = ${Qt5_VERSION_MAJOR}")
+    message(STATUS "Qt5_VERSION_MINOR = ${Qt5_VERSION_MINOR}")
+    message(STATUS "Qt5_VERSION_PATCH = ${Qt5_VERSION_PATCH}")      
+    message(STATUS "Qt5_INCLUDE_DIRS = ${Qt5_INCLUDE_DIRS}")
+    message(STATUS "Qt5_LIBRARIES = ${Qt5_LIBRARIES}")
+else()
+    message(FATAL_ERROR "Qt5_FOUND not found")
+endif()
 
 ##########
 # OpenCascade
 ##########
+#option(OpenCASCADE_DIR "" CACHE PATH "Path to OpenCASCADE installation")
+# 7.7.0 COMPONENTS not found in CMakeLists.txt
 find_package(OpenCASCADE REQUIRED )
 if(OpenCASCADE_FOUND)
-    message(STATUS "OpenCASCADE found")
+    message(STATUS "OpenCASCADE_DIR = ${OpenCASCADE_DIR}")
+    message(STATUS "OpenCASCADE_INCLUDE_DIR = ${OpenCASCADE_INCLUDE_DIR}")
     message(STATUS "OpenCASCADE_LIBRARY_DIR = ${OpenCASCADE_LIBRARY_DIR}")
     message(STATUS "OpenCASCADE_LIBRARIES = ${OpenCASCADE_LIBRARIES}")
 else()
@@ -26,6 +43,7 @@ endif()
 ##########
 # VTK
 ##########
+#option(VTK_DIR "" CACHE PATH "Path to VTK installation")
 find_package(VTK REQUIRED COMPONENTS
     GUISupportQt
     RenderingCore
@@ -42,15 +60,69 @@ find_package(VTK REQUIRED COMPONENTS
     IOCore
     IOLegacy 
 )
+if(VTK_FOUND)
+    message(STATUS "VTK_INCLUDE_DIRS = ${VTK_INCLUDE_DIRS}")
+    message(STATUS "VTK_LIBRARIES = ${VTK_LIBRARIES}")
+    message(STATUS "VTK_DIR = ${VTK_DIR}")
+else()
+    message(FATAL_ERROR "VTK_DIR not found")
+endif()
+
+##########
+# OpenCascade
+##########
+#option(OpenCASCADE_DIR "" CACHE PATH "Path to OpenCASCADE installation")
+# 7.7.0 COMPONENTS not found in CMakeLists.txt
+find_package(OpenCASCADE REQUIRED )
+if(OpenCASCADE_FOUND)
+    message(STATUS "OpenCASCADE_DIR = ${OpenCASCADE_DIR}")
+    message(STATUS "OpenCASCADE_INCLUDE_DIR = ${OpenCASCADE_INCLUDE_DIR}")
+    message(STATUS "OpenCASCADE_LIBRARY_DIR = ${OpenCASCADE_LIBRARY_DIR}")
+    message(STATUS "OpenCASCADE_LIBRARIES = ${OpenCASCADE_LIBRARIES}")
+else()
+    message(FATAL_ERROR "OpenCASCADE not found")
+endif()
+
+
+##########
+# VTK
+##########
+#option(VTK_DIR "" CACHE PATH "Path to VTK installation")
+find_package(VTK REQUIRED COMPONENTS
+    GUISupportQt
+    RenderingCore
+    InteractionStyle
+    RenderingOpenGL2
+    CommonCore
+    CommonDataModel
+    FiltersSources
+    FiltersGeometry
+    FiltersCore
+    RenderingQt
+    GUISupportQt
+    RenderingCore
+    IOCore
+    IOLegacy 
+)
+if(VTK_FOUND)
+    include(${VTK_USE_FILE})
+    message(STATUS "VTK_DIR = ${VTK_DIR}")
+    message(STATUS "VTK_INCLUDE_DIRS = ${VTK_INCLUDE_DIRS}")
+    message(STATUS "VTK_LIBRARIES = ${VTK_LIBRARIES}")
+    message(STATUS "VTK_VERSION = ${VTK_VERSION}")
+else()
+    message(FATAL_ERROR "VTK_DIR not found")
+endif()
 
 
 
+##########
 set(CMAKE_AUTOMOC ON)
-include(${VTK_USE_FILE}) 
+set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTORCC ON)
+
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/src
-    ${OpenCASCADE_INCLUDE_DIR}
-    ${VTK_INCLUDE_DIRS}
 )
 
 set(SOURCES
@@ -61,9 +133,9 @@ set(SOURCES
     src/main.cpp
 )
 
-add_executable(CADViewer ${SOURCES})
+add_executable(Qt_VTK_OCC ${SOURCES})
 
-target_link_libraries(CADViewer
+target_link_libraries(Qt_VTK_OCC
     Qt5::Widgets
     Qt5::OpenGL
     Qt5::Gui
@@ -118,11 +190,8 @@ target_link_libraries(CADViewer
     ${OpenCASCADE_LIBRARY_DIR}/TKSTEPBase.lib
 )
 
-foreach (LIB ${OpenCASCADE_LIBRARIES})
-  target_link_libraries(${PROJECT_NAME} debug ${OpenCASCADE_LIBRARY_DIR}/${LIB}.lib)
-  target_link_libraries(${PROJECT_NAME} optimized ${OpenCASCADE_LIBRARY_DIR}/${LIB}.lib)
-endforeach()
+target_include_directories(${PROJECT_NAME} PRIVATE
+    ${OpenCASCADE_INCLUDE_DIR}
+)
 
-set_property(TARGET ${PROJECT_NAME} PROPERTY VS_DEBUGGER_ENVIRONMENT "PATH=$<$<CONFIG:DEBUG>:${OpenCASCADE_BINARY_DIR}>$<$<NOT:$<CONFIG:DEBUG>>:${OpenCASCADE_BINARY_DIR}>;%PATH%")
-
-install(TARGETS CADViewer DESTINATION bin)
+install(TARGETS Qt_VTK_OCC DESTINATION bin)
