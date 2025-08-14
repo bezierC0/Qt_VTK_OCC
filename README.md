@@ -2,7 +2,7 @@
 
 This is a simple project demonstrating the integration of OpenCASCADE Technology (OCC), the Visualization Toolkit (VTK), and Qt.
 
-[Englis](./README.md) | [中文](./README.zh_CN.md) | [日本語](./README.jp_JP.md)
+[English](./README.md) | [中文](./README.zh_CN.md) | [日本語](./README.jp_JP.md)
 
 ## Dependencies
 
@@ -31,3 +31,4 @@ This project uses CMake as the build system.
     cmake --build .
     ```
     Alternatively, you can open the generated project file (e.g., `.sln` for Visual Studio) in your IDE and build it from there.
+
